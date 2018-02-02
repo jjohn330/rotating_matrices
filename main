@@ -1,0 +1,99 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+/* Access the read me to learn how to use the program correctly 
+  Author: Justin Johnson
+  Date and Time: February 2nd, 2018 @ 2:48 am
+  Language: C
+*/
+
+void trans_left(int rows, int cols, int**matrix) { // rotates 90 degrees to the left
+
+    int n_rows, n_cols;
+    int **n_matrix;
+
+    n_rows = cols;
+    n_cols = rows; // rows and columns are switched when rotating (only really applies when rows do not equal cols)
+
+    n_matrix = (int**)malloc(n_rows*sizeof(int*)); // creates new matrix to hold new rotated matrix
+
+    for (int i = 0; i < n_rows; i++) {// for loop takes values from old matrix and rearranges them to new matrix
+        n_matrix[i] = (int*)malloc(n_cols*sizeof(int));
+        for (int j = 0; j < n_cols; j++) {
+            *(*(n_matrix + i)+j) = *(*(matrix + j) + n_rows - (i+1));
+        }
+    }
+
+    for (int i = 0; i < n_rows; i++) { // for loop prints new rotated matrix
+        for (int j = 0; j < n_cols; j++) {
+            printf("%d\t", n_matrix[i][j]);
+        }
+        printf("\n");
+    }
+
+    free(n_matrix);
+}
+
+void trans_right(int rows, int cols, int **matrix) { // rotates matrix 90 degrees right
+    int n_rows = cols;
+    int n_cols = rows; // rows and cols are switched when rotated
+
+    int **n_matrix;
+
+    n_matrix = (int**)malloc(n_rows * sizeof(int*));
+
+    for (int i = 0; i < n_rows; i++) { // for loop takes values from old matrix and rearranges them with algorithm
+        n_matrix[i] = (int*)malloc(n_cols * sizeof(int));
+        for (int j = 0; j < n_cols; j++) {
+            *(*(n_matrix+i)+j) = *(*(matrix + n_cols - (j+1)) + i);
+        }
+    }
+
+    for (int i = 0; i < n_rows; i++) { // prints contents of new matrix
+        for (int j = 0; j < n_cols; j++) {
+                printf("%d\t", *(*(n_matrix+i)+j));
+        }
+        printf("\n");
+    }
+
+    free(n_matrix);
+}
+
+int main()
+{
+    int rows, cols;
+    printf("Enter rows then columns: ");
+    scanf("%d%d", &rows, &cols);
+
+    int **matrix; // pointer of pointers will hold multiple memory addresses to be manipulated later
+
+    matrix = (int**)malloc(rows*sizeof(int*));
+
+    printf("Enter %d entries of 0 and 255 for the %d by %d array: ", rows*cols, rows, cols);
+
+    for (int i = 0; i < rows; i++) { // stores values in array of pixel values
+        matrix[i] = (int*)malloc(cols*sizeof(int));
+        for (int j = 0; j < cols; j++) {
+            scanf("%d", &matrix[i][j]);
+        }
+    }
+
+    printf("This is the matrix you entered\n");
+
+    for (int i = 0; i < rows; i++) { // prints matrix in form that was interpreted by the computer
+        for (int j = 0; j < cols; j++) {
+            printf("%d\t", *(*(matrix + i) + j));
+        }
+        printf("\n");
+    }
+
+    printf("\n");
+
+    printf("Transposing the matrix left\n");
+    trans_left(rows, cols, matrix);
+    printf("\n");
+    printf("Transposing the matrix right\n");
+    trans_right(rows, cols, matrix);
+
+    return 0;
+}
